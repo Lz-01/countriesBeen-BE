@@ -12,6 +12,23 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Get user by ID
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Create a new user
 router.post("/", async (req, res) => {
   const { email } = req.body;
@@ -34,7 +51,7 @@ router.put("/:id/been", async (req, res) => {
   try {
     const result = await pool.query(
       "UPDATE users SET been_countries = $1 WHERE id = $2 RETURNING *",
-      [visitedCountries, id]
+      [beenCountries, id]
     );
 
     if (result.rows.length === 0) {
@@ -55,7 +72,7 @@ router.put("/:id/lived", async (req, res) => {
   try {
     const result = await pool.query(
       "UPDATE users SET lived_countries = $1 WHERE id = $2 RETURNING *",
-      [visitedCountries, id]
+      [livedCountries, id]
     );
 
     if (result.rows.length === 0) {
@@ -76,7 +93,7 @@ router.put("/:id/want", async (req, res) => {
   try {
     const result = await pool.query(
       "UPDATE users SET want_countries = $1 WHERE id = $2 RETURNING *",
-      [visitedCountries, id]
+      [wantCountries, id]
     );
 
     if (result.rows.length === 0) {
