@@ -26,14 +26,56 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Update visited countries
-router.put("/:id/visited", async (req, res) => {
+// Update been countries
+router.put("/:id/been", async (req, res) => {
   const { id } = req.params;
-  const { visitedCountries } = req.body;
+  const { beenCountries } = req.body;
 
   try {
     const result = await pool.query(
-      "UPDATE users SET visited_countries = $1 WHERE id = $2 RETURNING *",
+      "UPDATE users SET been_countries = $1 WHERE id = $2 RETURNING *",
+      [visitedCountries, id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update lived countries
+router.put("/:id/lived", async (req, res) => {
+  const { id } = req.params;
+  const { livedCountries } = req.body;
+
+  try {
+    const result = await pool.query(
+      "UPDATE users SET lived_countries = $1 WHERE id = $2 RETURNING *",
+      [visitedCountries, id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update want countries
+router.put("/:id/want", async (req, res) => {
+  const { id } = req.params;
+  const { wantCountries } = req.body;
+
+  try {
+    const result = await pool.query(
+      "UPDATE users SET want_countries = $1 WHERE id = $2 RETURNING *",
       [visitedCountries, id]
     );
 
