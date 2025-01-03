@@ -17,7 +17,7 @@ router.post("/", async (req, res) => {
   const { email } = req.body;
   try {
     const result = await pool.query(
-      "INSERT INTO users (email) VALUES ($1) RETURNING *",
+      "INSERT INTO users (email) VALUES ($1) ON CONFLICT (email) DO UPDATE SET email = EXCLUDED.email RETURNING *",
       [email]
     );
     res.status(201).json(result.rows[0]);
