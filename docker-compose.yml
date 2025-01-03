@@ -24,6 +24,6 @@ services:
       PG_PASSWORD: secure_password
       PG_DATABASE: countries_app
     ports:
-      - "5000:5000"
+      - "3000:3000"
     depends_on:
       - database
