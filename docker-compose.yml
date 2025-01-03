@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  database:
+    image: postgres:14
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: secure_password
+      POSTGRES_DB: countries_app
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+
+  backend:
+    build:
+      context: ./
+      dockerfile: server/dockerfile 
+    container_name: node_backend
+    environment:
+      PG_HOST: database
+      PG_PORT: 5432
+      PG_USER: app_user
+      PG_PASSWORD: secure_password
+      PG_DATABASE: countries_app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - database
